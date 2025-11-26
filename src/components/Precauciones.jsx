@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import "../App.css";
 
 export default function Precauciones() {
@@ -6,7 +7,8 @@ export default function Precauciones() {
     const location = useLocation();
     const { tipo } = location.state || {};
 
-    // Diccionario de íconos por nombre del elemento
+    const [paso, setPaso] = useState(1);
+
     const iconos = {
         "Guantes desechables": "🧤",
         "Bata de manga larga": "🥼",
@@ -31,7 +33,15 @@ export default function Precauciones() {
         "Habitación limpia y bien ventilada": "🧹"
     };
 
-    // Base de datos de precauciones
+    const imagenes = {
+        "Precaución de contacto": "/img/precaucion_de_contacto.png",
+        "Precaución por gotas": "/img/precaucion_por_gotas.png",
+        "Precauciones aéreas": "/img/precauciones_aereas.png",
+        "Precaución de aislamiento por vectores": "/img/precaucion_de_aislamiento_por_vectores.png",
+        "Precaución para pacientes inmunosuprimidos": "/img/precaucion_para_pacientes_inmunosuprimidos.png",
+        "Precaución por contacto Clostridium difficile": "/img/Precaucion_por_contacto_Clostridium_difficile.png"
+    };
+
     const detalles = {
         "Precaución de contacto": {
             color: "Black",
@@ -114,33 +124,66 @@ export default function Precauciones() {
         );
     }
 
+    // ================================
+    //   PASO 1 — INFORMACIÓN
+    // ================================
+    if (paso === 1) {
+        return (
+            <div className="container fade-in">
+                <h2 style={{ color: data.color }}>🧰 {tipo}</h2>
+                <p>{data.descripcion}</p>
+                <p><strong>Elementos de protección necesarios:</strong></p>
+
+                <div className="icons">
+                    {data.elementos.map((el, index) => (
+                        <div key={index} className="icon-item">
+                            <span style={{ fontSize: "2rem" }}>
+                                {iconos[el] || "🩺"}
+                            </span>
+                            <p>{el}</p>
+                        </div>
+                    ))}
+                </div>
+
+                {/* BOTONES ALINEADOS */}
+                <div className="btn-row">
+                    <button onClick={() => navigate(-1)} className="btn">
+                        Volver
+                    </button>
+                    <button onClick={() => setPaso(2)} className="btn">
+                        Siguiente
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    // ================================
+    //   PASO 2 — UNA SOLA IMAGEN
+    // ================================
     return (
         <div className="container fade-in">
-            <h2 style={{ color: data.color }}>🧰 {tipo}</h2>
-            <p>{data.descripcion}</p>
-            <p><strong>Elementos de protección necesarios:</strong></p>
+            <h2>🖼️ Elementos requeridos</h2>
 
-            <div className="icons">
-                {data.elementos.map((el, index) => (
-                    <div key={index} className="icon-item">
-                        <span style={{ fontSize: "2rem" }}>
-                            {iconos[el] || "🩺"}
-                        </span>
-                        <p>{el}</p>
-                    </div>
-                ))}
+            <div className="image-perfect-center">
+                <img
+                    src={imagenes[tipo] || "/img/default.png"}
+                    alt={tipo}
+                    className="precaucion-img"
+                />
             </div>
 
-            <div style={{ marginTop: "1.5rem" }}>
-                <button onClick={() => navigate("/recordatorio")} className="btn">
-                    Siguiente
-                </button>
-                <button
-                    onClick={() => navigate(-1)}
-                    className="btn"
-                    style={{ marginLeft: "0.5rem" }}
-                >
+            {/* BOTONES ALINEADOS */}
+            <div className="btn-row">
+                <button onClick={() => setPaso(1)} className="btn">
                     Volver
+                </button>
+
+                <button
+                    onClick={() => navigate("/Recordatorio")}
+                    className="btn"
+                >
+                    Siguiente
                 </button>
             </div>
         </div>
